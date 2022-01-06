@@ -1,0 +1,12 @@
+{
+  "server_port": 1101,
+  "database": {
+    "engine": "postgres",
+    "server": "127.0.0.1",
+    "port": 5432,
+    "user": "drean",
+    "password": "123456",
+    "name": "billing",
+    "sslmode": "disable"
+  }
+}
