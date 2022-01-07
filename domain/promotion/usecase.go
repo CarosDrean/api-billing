@@ -16,6 +16,18 @@ func New(storage Storage) *Promotion {
 }
 
 func (p Promotion) Create(m *model.Promotion) error {
+	promotion, err := p.storage.GetWhere(model.Fields{
+		model.Field{Name: "start_date", Value: m.StartDate, Operator: model.GreaterThanOrEqualTo},
+		model.Field{Name: "finish_date", Value: m.FinishDate, Operator: model.LessThanOrEqualTo},
+	}, model.SortFields{})
+	if err != nil {
+		return err
+	}
+
+	if promotion.HasID() {
+		return fmt.Errorf("promotion: the promotion will not be created because a promotion already exists in the range %v - %v", m.StartDate, m.FinishDate)
+	}
+
 	if err := p.storage.Create(m); err != nil {
 		return fmt.Errorf("promotion.storage.create(): %v", err)
 	}

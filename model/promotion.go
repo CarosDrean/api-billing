@@ -14,6 +14,10 @@ type Promotion struct {
 	UpdatedAt   time.Time `json:"updated_at"`
 }
 
+func (p Promotion) HasID() bool {
+	return p.ID != 0
+}
+
 type Promotions []Promotion
 
 func (ps Promotions) FilterByID(ID uint) (Promotion, bool) {
