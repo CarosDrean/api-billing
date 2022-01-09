@@ -7,7 +7,7 @@ import (
 	"api-billing/model"
 )
 
-const table = "medicine"
+const table = "medicines"
 
 var fields = []string{
 	"name",
@@ -102,6 +102,7 @@ func (p Medicine) GetAllWhere(filter model.Fields, sort model.SortFields, pag mo
 
 func (p Medicine) scanRow(sq postgres.RowScanner) (model.Medicine, error) {
 	m := model.Medicine{}
+	updatedAtNull := sql.NullTime{}
 
 	err := sq.Scan(
 		&m.ID,
@@ -109,11 +110,13 @@ func (p Medicine) scanRow(sq postgres.RowScanner) (model.Medicine, error) {
 		&m.Price,
 		&m.Location,
 		&m.CreatedAt,
-		&m.UpdatedAt,
+		&updatedAtNull,
 	)
 	if err != nil {
 		return model.Medicine{}, err
 	}
+
+	m.UpdatedAt = updatedAtNull.Time
 
 	return m, nil
 }

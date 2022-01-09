@@ -1,6 +1,8 @@
 package promotion
 
 import (
+	"database/sql"
+	"errors"
 	"fmt"
 	"time"
 
@@ -20,8 +22,8 @@ func (p Promotion) Create(m *model.Promotion) error {
 		model.Field{Name: "start_date", Value: m.StartDate, Operator: model.GreaterThanOrEqualTo},
 		model.Field{Name: "finish_date", Value: m.FinishDate, Operator: model.LessThanOrEqualTo},
 	}, model.SortFields{})
-	if err != nil {
-		return err
+	if err != nil && !errors.Is(sql.ErrNoRows, err) {
+		return fmt.Errorf("promotion.storage.GetWhere(): %v", err)
 	}
 
 	if promotion.HasID() {

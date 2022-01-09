@@ -3,9 +3,9 @@ CREATE DATABASE billing;
 CREATE TABLE medicines
 (
     id         SERIAL       NOT NULL,
-    name       VARCHAR(100) NOT NULL,
+    name       VARCHAR(50) NOT NULL,
     price      NUMERIC      NOT NULL,
-    location   VARCHAR(100) NOT NULL,
+    location   VARCHAR(50) NOT NULL,
     created_at TIMESTAMP    NOT NULL DEFAULT now(),
     updated_at TIMESTAMP,
     CONSTRAINT medicines_id_pk PRIMARY KEY (id)
@@ -14,7 +14,7 @@ CREATE TABLE medicines
 CREATE TABLE promotions
 (
     id          SERIAL       NOT NULL,
-    description VARCHAR(300) NOT NULL,
+    description VARCHAR(100) NOT NULL,
     percentage  INTEGER      NOT NULL,
     start_date  TIMESTAMP    NOT NULL,
     finish_date TIMESTAMP    NOT NULL,

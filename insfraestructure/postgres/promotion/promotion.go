@@ -104,6 +104,7 @@ func (p Promotion) GetAllWhere(filter model.Fields, sort model.SortFields, pag m
 
 func (p Promotion) scanRow(sq postgres.RowScanner) (model.Promotion, error) {
 	m := model.Promotion{}
+	updatedAtNull := sql.NullTime{}
 
 	err := sq.Scan(
 		&m.ID,
@@ -112,11 +113,13 @@ func (p Promotion) scanRow(sq postgres.RowScanner) (model.Promotion, error) {
 		&m.StartDate,
 		&m.FinishDate,
 		&m.CreatedAt,
-		&m.UpdatedAt,
+		&updatedAtNull,
 	)
 	if err != nil {
 		return model.Promotion{}, err
 	}
+
+	m.UpdatedAt = updatedAtNull.Time
 
 	return m, nil
 }

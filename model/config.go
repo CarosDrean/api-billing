@@ -1,8 +1,10 @@
 package model
 
 type Configuration struct {
-	ServerPort uint16   `json:"server_port"`
-	Database   Database `json:"database"`
+	ServerPort     uint16   `json:"server_port"`
+	AllowedOrigins []string `json:"allowed_origins"`
+	AllowedMethods []string `json:"allowed_methods"`
+	Database       Database `json:"database"`
 }
 
 type Database struct {

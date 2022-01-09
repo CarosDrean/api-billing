@@ -112,6 +112,7 @@ func (p Invoice) GetAllWhere(filter model.Fields, sort model.SortFields, pag mod
 
 func (p Invoice) scanRow(sq postgres.RowScanner) (model.Invoice, error) {
 	m := model.Invoice{}
+	updatedAtNull := sql.NullTime{}
 
 	err := sq.Scan(
 		&m.ID,
@@ -119,7 +120,7 @@ func (p Invoice) scanRow(sq postgres.RowScanner) (model.Invoice, error) {
 		&m.PromotionID,
 		&m.MedicinesIDsRawJSON,
 		&m.CreatedAt,
-		&m.UpdatedAt,
+		&updatedAtNull,
 	)
 	if err != nil {
 		return model.Invoice{}, err
@@ -130,6 +131,8 @@ func (p Invoice) scanRow(sq postgres.RowScanner) (model.Invoice, error) {
 			return m, err
 		}
 	}
+
+	m.UpdatedAt = updatedAtNull.Time
 
 	return m, nil
 }

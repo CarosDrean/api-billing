@@ -5,11 +5,12 @@ import (
 	"log"
 
 	"api-billing/insfraestructure/handler"
+	"api-billing/insfraestructure/handler/response"
 )
 
 func Run() error {
 	config := newConfiguration("./configuration.json")
-	api := newEcho()
+	api := newEcho(config, response.HTTPErrorHandler)
 
 	db, err := newDBConnection(config.Database)
 	if err != nil {
