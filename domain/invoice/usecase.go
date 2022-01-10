@@ -62,6 +62,23 @@ func (i *Invoice) Create(m *model.Invoice) error {
 	return nil
 }
 
+func (i *Invoice) GetAll() (model.Invoices, error) {
+	if err := i.validateDependencies(); err != nil {
+		return nil, fmt.Errorf("invoice.validateDependencies(): %v", err)
+	}
+
+	invoices, err := i.storage.GetAllWhere(model.Fields{}, model.SortFields{}, model.Pagination{})
+	if err != nil {
+		return nil, fmt.Errorf("invoice.storage.GetAllWhere(): %v", err)
+	}
+
+	if err := i.buildDetails(invoices); err != nil {
+		return nil, err
+	}
+
+	return invoices, nil
+}
+
 func (i *Invoice) GetAllByRangeCreatedAt(startDate, finishDate time.Time) (model.Invoices, error) {
 	if err := i.validateDependencies(); err != nil {
 		return nil, fmt.Errorf("invoice.validateDependencies(): %v", err)

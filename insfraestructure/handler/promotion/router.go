@@ -26,4 +26,5 @@ func privateRoutes(app *echo.Echo, handler handler) {
 
 	api.POST("", handler.create)
 	api.GET("", handler.getAll)
+	api.GET("/by-date", handler.getByDate)
 }

@@ -8,6 +8,7 @@ import (
 
 type UseCase interface {
 	Create(m *model.Invoice) error
+	GetAll() (model.Invoices, error)
 	GetAllByRangeCreatedAt(startDate, finishDate time.Time) (model.Invoices, error)
 	GetPriceByMedicinesIDsAndSaleDate(medicinesIDs []uint, saleDate time.Time) (float64, error)
 }

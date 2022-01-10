@@ -32,6 +32,7 @@ func privateRoutes(app *echo.Echo, handler handler) {
 	api := app.Group(privateRoutePrefix)
 
 	api.POST("", handler.create)
-	api.GET("", handler.getAllByRangeCreatedAt)
+	api.GET("", handler.getAll)
+	api.GET("/by-date", handler.getAllByRangeCreatedAt)
 	api.GET("/simulate", handler.GetPriceByMedicinesIDsAndSaleDate)
 }

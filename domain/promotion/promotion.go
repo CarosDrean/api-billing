@@ -1,10 +1,15 @@
 package promotion
 
-import "api-billing/model"
+import (
+	"time"
+
+	"api-billing/model"
+)
 
 type UseCase interface {
 	Create(m *model.Promotion) error
 	GetAll() (model.Promotions, error)
+	GetByDate(date time.Time) (model.Promotion, error)
 }
 
 type Storage interface {

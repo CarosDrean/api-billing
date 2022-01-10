@@ -1,11 +1,10 @@
 package invoice
 
 import (
-	"fmt"
-	"net/http"
 	"time"
 
 	"api-billing/domain/invoice"
+	"api-billing/insfraestructure/handler/response"
 	"api-billing/model"
 
 	"github.com/labstack/echo/v4"
@@ -23,14 +22,23 @@ func (h handler) create(c echo.Context) error {
 	m := model.Invoice{}
 
 	if err := c.Bind(&m); err != nil {
-		return c.JSON(http.StatusBadRequest, fmt.Errorf("c.Bind()"))
+		return response.Failed("c.Bind()", response.BindFailed, err)
 	}
 
 	if err := h.useCase.Create(&m); err != nil {
-		return c.JSON(http.StatusInternalServerError, fmt.Errorf("unexpected error: %v", err).Error())
+		return response.Failed("useCase.Create()", response.UnexpectedError, err)
 	}
 
-	return c.JSON(http.StatusCreated, fmt.Sprintf("created successful"))
+	return c.JSON(response.Successfull(response.RecordCreated, m))
+}
+
+func (h handler) getAll(c echo.Context) error {
+	data, err := h.useCase.GetAll()
+	if err != nil {
+		return response.Failed("useCase.GetAll()", response.UnexpectedError, err)
+	}
+
+	return c.JSON(response.Successfull(response.Ok, data))
 }
 
 func (h handler) getAllByRangeCreatedAt(c echo.Context) error {
@@ -39,39 +47,39 @@ func (h handler) getAllByRangeCreatedAt(c echo.Context) error {
 
 	startDate, err := time.Parse(time.RFC3339, startDateString)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, fmt.Errorf("time.Parse()"))
+		return response.Failed("time.Parse", response.Failure, err)
 	}
 
 	finishDate, err := time.Parse(time.RFC3339, finishDateString)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, fmt.Errorf("time.Parse()"))
+		return response.Failed("time.Parse", response.Failure, err)
 	}
 
 	data, err := h.useCase.GetAllByRangeCreatedAt(startDate, finishDate)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, fmt.Errorf("unexpected error: %v", err).Error())
+		return response.Failed("useCase.GetAllByRangeCreatedAt()", response.UnexpectedError, err)
 	}
 
-	return c.JSON(http.StatusOK, data)
+	return c.JSON(response.Successfull(response.Ok, data))
 }
 
 func (h handler) GetPriceByMedicinesIDsAndSaleDate(c echo.Context) error {
 	m := model.Invoice{}
 
 	if err := c.Bind(&m); err != nil {
-		return c.JSON(http.StatusBadRequest, fmt.Errorf("c.Bind()"))
+		return response.Failed("c.Bind()", response.BindFailed, err)
 	}
 
 	saleDateString := c.FormValue("sale-date")
 	saleDate, err := time.Parse(time.RFC3339, saleDateString)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, fmt.Errorf("time.Parse()"))
+		return response.Failed("time.Parse", response.Failure, err)
 	}
 
 	data, err := h.useCase.GetPriceByMedicinesIDsAndSaleDate(m.MedicinesIDs, saleDate)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, fmt.Errorf("unexpected error: %v", err).Error())
+		return response.Failed("useCase.GetPriceByMedicinesIDsAndSaleDate()", response.UnexpectedError, err)
 	}
 
-	return c.JSON(http.StatusOK, data)
+	return c.JSON(response.Successfull(response.Ok, data))
 }

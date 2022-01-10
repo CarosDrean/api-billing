@@ -46,6 +46,18 @@ func (p Promotion) GetAll() (model.Promotions, error) {
 	return promotions, nil
 }
 
+func (p Promotion) GetByDate(date time.Time) (model.Promotion, error) {
+	promotions, err := p.storage.GetWhere(model.Fields{
+		model.Field{Name: "start_date", Value: date, Operator: model.LessThanOrEqualTo},
+		model.Field{Name: "finish_date", Value: date, Operator: model.GreaterThanOrEqualTo},
+	}, model.SortFields{})
+	if err != nil {
+		return model.Promotion{}, fmt.Errorf("promotion.storage.GetWhere(): %w", err)
+	}
+
+	return promotions, nil
+}
+
 func (p Promotion) GetByIDs(IDs []uint) (model.Promotions, error) {
 	promotions, err := p.storage.GetAllWhere(model.Fields{
 		model.Field{Name: "id", Value: IDs, Operator: model.In},

@@ -1,10 +1,9 @@
 package promotion
 
 import (
-	"database/sql"
-
 	"api-billing/insfraestructure/postgres"
 	"api-billing/model"
+	"database/sql"
 )
 
 const table = "promotions"

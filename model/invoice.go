@@ -6,15 +6,15 @@ import (
 )
 
 type Invoice struct {
-	ID         uint      `json:"id"`
-	TotalPrice float64   `json:"total_price"`
-	Promotion  Promotion `json:"promotion"`
-	Medicines  Medicines `json:"medicines"`
-	CreatedAt  time.Time `json:"created_at"`
-	UpdatedAt  time.Time `json:"updated_at"`
+	ID           uint      `json:"id"`
+	TotalPrice   float64   `json:"total_price"`
+	PromotionID  uint      `json:"promotion_id"`
+	Promotion    Promotion `json:"promotion"`
+	MedicinesIDs []uint    `json:"medicines_ids"`
+	Medicines    Medicines `json:"medicines"`
+	CreatedAt    time.Time `json:"created_at"`
 
-	PromotionID         uint             `json:"-"`
-	MedicinesIDs        []uint           `json:"-"`
+	UpdatedAt           time.Time        `json:"updated_at"`
 	MedicinesIDsRawJSON *json.RawMessage `json:"-"`
 }
 
